@@ -43,6 +43,8 @@ const flashcards = [
     // Add more words here...
 ];
 
+let currentIndex = 0;
+
 // Function to create a flashcard element
 function createFlashcard(spanish, english) {
     const flashcard = document.createElement('div');
@@ -52,20 +54,59 @@ function createFlashcard(spanish, english) {
         <p>${english}</p>
     `;
     flashcard.addEventListener('click', function() {
-        const p = this.querySelector('p');
-        p.style.display = (p.style.display === 'none') ? 'block' : 'none';
+        toggleTranslation(this);
     });
     return flashcard;
+}
+
+// Function to toggle translation on click
+function toggleTranslation(flashcard) {
+    const p = flashcard.querySelector('p');
+    p.style.display = (p.style.display === 'none') ? 'block' : 'none';
 }
 
 // Function to render flashcards
 function renderFlashcards() {
     const flashcardContainer = document.getElementById('flashcardContainer');
-    flashcards.forEach(card => {
-        const { spanish, english } = card;
-        const flashcard = createFlashcard(spanish, english);
-        flashcardContainer.appendChild(flashcard);
+    const currentCard = createFlashcard(flashcards[currentIndex].spanish, flashcards[currentIndex].english);
+    flashcardContainer.appendChild(currentCard);
+
+    // Swipe detection
+    let startX;
+    flashcardContainer.addEventListener('touchstart', function(e) {
+        startX = e.touches[0].clientX;
     });
+    flashcardContainer.addEventListener('touchend', function(e) {
+        const endX = e.changedTouches[0].clientX;
+        const deltaX = endX - startX;
+        if (deltaX > 50) {
+            // Swipe from right to left (previous card)
+            prevCard();
+        } else if (deltaX < -50) {
+            // Swipe from left to right (next card)
+            nextCard();
+        }
+    });
+}
+
+// Function to show previous card
+function prevCard() {
+    currentIndex = (currentIndex === 0) ? flashcards.length - 1 : currentIndex - 1;
+    renderCard();
+}
+
+// Function to show next card
+function nextCard() {
+    currentIndex = (currentIndex === flashcards.length - 1) ? 0 : currentIndex + 1;
+    renderCard();
+}
+
+// Function to render current card
+function renderCard() {
+    const flashcardContainer = document.getElementById('flashcardContainer');
+    flashcardContainer.innerHTML = '';
+    const currentCard = createFlashcard(flashcards[currentIndex].spanish, flashcards[currentIndex].english);
+    flashcardContainer.appendChild(currentCard);
 }
 
 // Call the renderFlashcards function to initialize the flashcards
