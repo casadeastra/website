@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spanish to English Flashcards</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f4f4f4;
+    }
+    .flashcard {
+        display: inline-block;
+        width: 200px;
+        height: 100px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        margin: 20px;
+        padding: 20px;
+        cursor: pointer;
+    }
+    .flashcard h2 {
+        margin: 0;
+        font-size: 20px;
+    }
+    .flashcard p {
+        display: none;
+        font-size: 16px;
+        color: #666;
+    }
+</style>
+</head>
+<body>
+<h1>Spanish to English Flashcards</h1>
+<div id="flashcardContainer"></div>
+
+<script>
+// Array of 200 most common Spanish words and their English translations
+const flashcards = [
+    { spanish: "el", english: "the" },
+    { spanish: "de", english: "of" },
+    // Add more words here...
+];
+
+// Function to create a flashcard element
+function createFlashcard(spanish, english) {
+    const flashcard = document.createElement('div');
+    flashcard.classList.add('flashcard');
+    flashcard.innerHTML = `
+        <h2>${spanish}</h2>
+        <p>${english}</p>
+    `;
+    flashcard.addEventListener('click', function() {
+        const p = this.querySelector('p');
+        p.style.display = (p.style.display === 'none') ? 'block' : 'none';
+    });
+    return flashcard;
+}
+
+// Function to render flashcards
+function renderFlashcards() {
+    const flashcardContainer = document.getElementById('flashcardContainer');
+    flashcards.forEach(card => {
+        const { spanish, english } = card;
+        const flashcard = createFlashcard(spanish, english);
+        flashcardContainer.appendChild(flashcard);
+    });
+}
+
+// Call the renderFlashcards function to initialize the flashcards
+renderFlashcards();
+</script>
+</body>
+</html>
